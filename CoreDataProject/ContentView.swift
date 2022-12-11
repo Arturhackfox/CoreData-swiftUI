@@ -11,12 +11,15 @@ import CoreData
 struct ContentView: View {
     
     @Environment(\.managedObjectContext) var moc
-    @State private var lastNameFiltered = "S"
+    @State private var nameFiltered = "T"
    
     
     var body: some View {
         VStack {
-          FilteredListView(filter: lastNameFiltered)
+            FilteredListView(filterKey: "name", filterValue: nameFiltered) {
+            (singer: Singer) in
+                Text("\(singer.unwrappedName) \(singer.unwrappedLastName)")
+            }
             
             
             
@@ -29,7 +32,7 @@ struct ContentView: View {
             taylor.lastName = "Swift"
             
             let pitter = Singer(context: moc)
-            pitter.name = "Pitter"
+            pitter.name = "Aitter"
             pitter.lastName = "Parker"
             
             let Sava = Singer(context: moc)
@@ -39,12 +42,12 @@ struct ContentView: View {
             try? moc.save()
         }
         
-        Button("Filter P") {
-            lastNameFiltered = "P"
+        Button("Filter T") {
+            nameFiltered = "T"
         }
         
-        Button("Filter S"){
-            lastNameFiltered = "S"
+        Button("Filter A"){
+            nameFiltered = "A"
         }
     }
 }

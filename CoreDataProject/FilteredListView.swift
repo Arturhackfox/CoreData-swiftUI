@@ -6,17 +6,23 @@
 //
 
 import SwiftUI
+import CoreData
 
-struct FilteredListView: View {
-    @FetchRequest var fetchRequest: FetchedResults<Singer>
+struct FilteredListView<T: NSManagedObject, Content: View>: View {
+    
+    @FetchRequest var fetchRequest: FetchedResults<T>
+    
+    let content: (T) -> Content
+    
     var body: some View {
         List(fetchRequest, id: \.self) {singer in
-            Text("\(singer.unwrappedName) \(singer.unwrappedLastName)")
+            self.content(singer)
         }
     }
     
-    init(filter: String) {
-        _fetchRequest = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "lastName BEGINSWITH %@", filter))
+    init(filterKey: String, filterValue: String, @ViewBuilder content: @escaping (T) -> Content ) {
+        _fetchRequest = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "%K BEGINSWITH %@",filterKey, filterValue))
+        self.content = content
     }
 }
 
