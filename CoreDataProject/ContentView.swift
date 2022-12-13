@@ -11,15 +11,19 @@ import CoreData
 struct ContentView: View {
     
     @Environment(\.managedObjectContext) var moc
-    @State private var nameFiltered = "T"
-   
+    @State private var nameFiltered = "A"
+    @State private var whatPredicate = "BEGINSWITH"
+    
+    
+ 
+    
     
     var body: some View {
         VStack {
-            FilteredListView(filterKey: "name", filterValue: nameFiltered) {
-            (singer: Singer) in
+            FilteredListView(filterKey: "name", filterValue: nameFiltered, WHATPREDICATE: .beginsWith, content: {(singer: Singer) in
                 Text("\(singer.unwrappedName) \(singer.unwrappedLastName)")
-            }
+            })
+            
             
             
             
@@ -50,6 +54,7 @@ struct ContentView: View {
             nameFiltered = "A"
         }
     }
+ 
 }
 
 struct ContentView_Previews: PreviewProvider {

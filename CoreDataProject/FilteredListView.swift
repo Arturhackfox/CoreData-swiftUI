@@ -10,6 +10,12 @@ import CoreData
 
 struct FilteredListView<T: NSManagedObject, Content: View>: View {
     
+    // enum to control predicates
+    enum Predicates: String {
+        case beginsWith = "BEGINSWITH"
+        case contains = "CONTAINS[c]"
+    }
+    
     @FetchRequest var fetchRequest: FetchedResults<T>
     
     let content: (T) -> Content
@@ -20,8 +26,9 @@ struct FilteredListView<T: NSManagedObject, Content: View>: View {
         }
     }
     
-    init(filterKey: String, filterValue: String, @ViewBuilder content: @escaping (T) -> Content ) {
-        _fetchRequest = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "%K BEGINSWITH %@",filterKey, filterValue))
+    
+    init(filterKey: String, filterValue: String, WHATPREDICATE: Predicates = .contains, @ViewBuilder content: @escaping (T) -> Content ) {
+        _fetchRequest = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "%K \(WHATPREDICATE) %@",filterKey, filterValue))
         self.content = content
     }
 }
